@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.microservice.agendaservice.api.mapper.PacienteMapper;
+import br.com.microservice.agendaservice.api.request.PacienteRequest;
+import br.com.microservice.agendaservice.api.response.PacienteResponse;
 import br.com.microservice.agendaservice.domain.entity.Paciente;
 import br.com.microservice.agendaservice.domain.services.PacienteService;
 import jakarta.validation.Valid;
@@ -27,9 +30,12 @@ public class PacienteController {
 	private final PacienteService service;
 	
 	@PostMapping
-	public ResponseEntity<Paciente> salvar(@Valid @RequestBody Paciente paciente){
+	public ResponseEntity<PacienteResponse> salvar(@Valid @RequestBody PacienteRequest request){
+		
+		Paciente paciente = PacienteMapper.toPaciente(request);
 		Paciente pacienteSalvo = service.salvar(paciente);
-		return ResponseEntity.status(HttpStatus.CREATED).body(pacienteSalvo);
+		PacienteResponse response = PacienteMapper.toPacienteResponse(pacienteSalvo);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@GetMapping
