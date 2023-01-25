@@ -28,40 +28,43 @@ import lombok.RequiredArgsConstructor;
 public class PacienteController {
 
 	private final PacienteService service;
+	private final PacienteMapper mapper;
 	
 	@PostMapping
 	public ResponseEntity<PacienteResponse> salvar(@Valid @RequestBody PacienteRequest request){
 		
-		Paciente paciente = PacienteMapper.toPaciente(request);
+		Paciente paciente = mapper.toPaciente(request);
 		Paciente pacienteSalvo = service.salvar(paciente);
-		PacienteResponse response = PacienteMapper.toPacienteResponse(pacienteSalvo);
+		PacienteResponse response = mapper.toPacienteResponse(pacienteSalvo);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Paciente>> listarTodos(){
+	public ResponseEntity<List<PacienteResponse>> listarTodos(){
 		List<Paciente> pacientes = service.listarTodos();
-		return ResponseEntity.status(HttpStatus.OK).body(pacientes);
+		List<PacienteResponse> pacienteResponses = mapper.toPacienteResponseList(pacientes);
+		return ResponseEntity.status(HttpStatus.OK).body(pacienteResponses);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Paciente> listarPorId(@PathVariable Long id){
+	public ResponseEntity<PacienteResponse> listarPorId(@Valid @PathVariable Long id){
 		Optional<Paciente> paciente = service.buscarPorId(id);
 		if(paciente.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(paciente.get());
+		return ResponseEntity.status(HttpStatus.OK).body(mapper.toPacienteResponse(paciente.get()));
 	}
 	
-	@PutMapping
-	public ResponseEntity<Paciente> alterar(@RequestBody Paciente paciente){
-		Paciente pacienteSalvo = service.salvar(paciente);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(pacienteSalvo);
+	@PutMapping("/{id}")
+	public ResponseEntity<PacienteResponse> alterar(@Valid @PathVariable Long id, @RequestBody PacienteRequest request){
+		Paciente paciente = mapper.toPaciente(request);
+		Paciente pacienteSalvo = service.alterar(id, paciente);
+		PacienteResponse pacienteResponse = mapper.toPacienteResponse(pacienteSalvo);
+		return ResponseEntity.status(HttpStatus.OK).body(pacienteResponse);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id){
+	public ResponseEntity<Void> deletar(@Valid @PathVariable Long id){
 		service.deletar(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		
