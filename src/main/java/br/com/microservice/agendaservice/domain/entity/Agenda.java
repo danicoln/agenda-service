@@ -1,17 +1,11 @@
 package br.com.microservice.agendaservice.domain.entity;
 
-import java.time.OffsetDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,19 +13,19 @@ import lombok.Setter;
 @Table(name = "agenda")
 public class Agenda {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@NotNull
-	private String descricao;
-	
-	@Column(name = "data_hora")
-	private OffsetDateTime horario;
-	
-	@Column(name = "data_criacao")
-	private OffsetDateTime dataCriacao;
-	
-	@ManyToOne
-	private Paciente paciente;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    private String descricao;
+
+    @Column(name = "data_hora")
+    private LocalDateTime horario;
+
+    @Column(name = "data_criacao")
+    private LocalDateTime dataCriacao;
+
+    @ManyToOne
+    private Paciente paciente;
 }

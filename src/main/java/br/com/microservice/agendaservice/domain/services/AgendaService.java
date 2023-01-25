@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +43,7 @@ public class AgendaService {
         }
 
         agenda.setPaciente(optPaciente.get());
-        agenda.setDataCriacao(OffsetDateTime.now());
+        agenda.setDataCriacao(LocalDateTime.now());
 
         return repository.save(agenda);
     }
